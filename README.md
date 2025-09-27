@@ -23,20 +23,20 @@ Prosta aplikacja webowa dla nauki skupiona przede wszystkim na możliwości wyst
 ## Wymagania niefunkcjonalne:
 * Logowanie przez Oauth 2.0,
 * Technologie:
-- Java 17,
-- Spring Boot,
-- Hibernate,
-- Spring Data Jpa,
-- Spring Security,
-- SQL,
-- PostgreSQL,
-- React,
-- TypeScript,
-- Context Api,
-- Docker,
-- Kubernetes,
-- Rest,
-- Git.
+    - Java 17,
+    - Spring Boot,
+    - Hibernate,
+    - Spring Data Jpa,
+    - Spring Security,
+    - SQL,
+    - PostgreSQL,
+    - React,
+    - TypeScript,
+    - Context Api,
+    - Docker,
+    - Kubernetes,
+    - Rest,
+    - Git.
 
 ## Role:
 * Administrator - zarządzanie zasobami w systemie,
