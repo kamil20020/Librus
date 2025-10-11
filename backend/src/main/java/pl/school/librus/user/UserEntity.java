@@ -46,19 +46,19 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String street;
 
-    @Column(name = "post_code")
+    @Column(name = "post_code", nullable = false)
     private String postCode;
 
-    @Column(nullable = false)
+    @Column(name = "building_number", nullable = false)
     private String buildingNumber;
 
     @Column(nullable = false)
     private Short floor;
 
-    @Column(nullable = false)
+    @Column(name = "door_code", nullable = false)
     private String doorCode;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "USERS_ROLES",
         joinColumns = @JoinColumn(name = "user_id", nullable = false),

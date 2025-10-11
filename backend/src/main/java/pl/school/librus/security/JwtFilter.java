@@ -5,11 +5,17 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.school.librus.exception.InvalidBearerTokenException;
+import pl.school.librus.user.UserEntity;
+import pl.school.librus.user.UserService;
 
 import java.io.IOException;
 
@@ -18,6 +24,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -25,6 +32,9 @@ public class JwtFilter extends OncePerRequestFilter {
         String authorizationContent = request.getHeader("Authorization");
 
         if(!hasToken(authorizationContent)){
+
+            filterChain.doFilter(request, response);
+
             return;
         }
 
@@ -35,7 +45,9 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new InvalidBearerTokenException("Bearer token was not given");
         }
 
-        Authentication authentication = getAuth();
+        Authentication authentication = getAuth(token);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }
@@ -47,9 +59,17 @@ public class JwtFilter extends OncePerRequestFilter {
             authorizationContent.startsWith("Bearer");
     }
 
-    private Authentication getAuth() throws AuthenticationException {
+    private Authentication getAuth(String token) throws AuthenticationException {
 
-        return null;
+        String username = jwtService.extractUsername(token, "token");
+
+        UserDetails gotUser = userDetailsService.loadUserByUsername(username);
+
+        return new UsernamePasswordAuthenticationToken(
+            gotUser,
+            null,
+            gotUser.getAuthorities()
+        );
     }
 
 }
