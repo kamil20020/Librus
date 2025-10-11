@@ -1,0 +1,14 @@
+services:
+  librus-db:
+    container_name: librus-db
+    image: postgres:13-alpine
+
+    restart: always
+    environment:
+      POSTGRES_DB: librus
+      POSTGRES_USER: librus
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-data:/var/lib/postgresql
