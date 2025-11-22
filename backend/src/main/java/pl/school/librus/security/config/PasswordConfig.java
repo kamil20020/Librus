@@ -1,4 +1,4 @@
-package pl.school.librus.security;
+package pl.school.librus.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,5 +13,4 @@ public class PasswordConfig {
 
         return new BCryptPasswordEncoder();
     }
-
 }

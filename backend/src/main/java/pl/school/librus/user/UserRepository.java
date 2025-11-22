@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, UUID>, ListPagingAndSortingRepository<UserEntity, UUID> {
 
+    boolean existsByUsername(String username);
     Optional<UserEntity> findByUsername(String username);
-
 }

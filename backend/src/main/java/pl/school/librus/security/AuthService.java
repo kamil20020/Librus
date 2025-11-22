@@ -5,12 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
-import pl.school.librus.user.LoggedResponse;
-import pl.school.librus.user.UserCredentials;
+import pl.school.librus.security.api.request.LoginRequest;
+import pl.school.librus.security.api.response.LoggedUserTokensResponse;
 import pl.school.librus.user.UserEntity;
-import pl.school.librus.user.UserRepository;
 
 @Slf4j
 @Service
@@ -20,11 +19,11 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public LoggedResponse login(UserCredentials userCredentials){
+    public LoggedUserTokensResponse login(LoginRequest request) throws AuthenticationException {
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-            userCredentials.username(),
-            userCredentials.password()
+            request.username(),
+            request.password()
         );
 
         Authentication auth = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
@@ -33,7 +32,6 @@ public class AuthService {
         String accessToken = jwtService.getAccessToken(gotUser);
         String refreshToken = jwtService.generateRefreshToken(gotUser.getId().toString(), gotUser.getUsername());
 
-        return new LoggedResponse(accessToken, refreshToken);
+        return new LoggedUserTokensResponse(accessToken, refreshToken);
     }
-
 }

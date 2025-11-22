@@ -1,5 +1,6 @@
 package pl.school.librus.user;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import pl.school.librus.security.JwtService;
 import pl.school.librus.user.UserEntity;
 import pl.school.librus.user.UserRepository;
+import pl.school.librus.user.api.request.RegisterUserRequest;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -26,14 +28,26 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserEntity create(UserEntity user){
+    public UserEntity register(RegisterUserRequest request) throws EntityExistsException{
 
-        String rawPassword = user.getPassword();
+        String username = request.username();
+
+        if(userRepository.existsByUsername(username)){
+            throw new EntityExistsException("Istnieje już użytkownik o podanym loginie");
+        }
+
+        String rawPassword = request.password();
         String encryptedPassword = passwordEncoder.encode(rawPassword);
 
-        user.setPassword(encryptedPassword);
+        UserEntity toCreateUser = UserEntity.builder()
+            .username(username)
+            .password(encryptedPassword)
+            .email(request.email())
+            .firstname(request.firstname())
+            .surname(request.surname())
+        .build();
 
-        return userRepository.save(user);
+        return userRepository.save(toCreateUser);
     }
 
     @Override
@@ -44,5 +58,4 @@ public class UserService implements UserDetailsService {
         return foundUserOpt
             .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found"));
     }
-
 }

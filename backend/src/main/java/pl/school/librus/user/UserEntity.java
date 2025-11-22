@@ -10,6 +10,7 @@ import pl.school.librus.role.RoleEntity;
 import java.util.*;
 
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -37,26 +38,8 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String surname;
 
-    @Column(nullable = false)
+    @Column
     private String phone;
-
-    @Column(nullable = false)
-    private String city;
-
-    @Column(nullable = false)
-    private String street;
-
-    @Column(name = "post_code", nullable = false)
-    private String postCode;
-
-    @Column(name = "building_number", nullable = false)
-    private String buildingNumber;
-
-    @Column(nullable = false)
-    private Short floor;
-
-    @Column(name = "door_code", nullable = false)
-    private String doorCode;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -111,5 +94,4 @@ public class UserEntity implements UserDetails {
 
         return true;
     }
-
 }

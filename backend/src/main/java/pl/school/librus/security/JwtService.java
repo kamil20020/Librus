@@ -102,5 +102,4 @@ public class JwtService {
             .requireAudience(issuer)
             .build();
     }
-
 }

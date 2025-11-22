@@ -1,4 +1,4 @@
-package pl.school.librus.security;
+package pl.school.librus.security.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.school.librus.exception.InvalidBearerTokenException;
+import pl.school.librus.security.JwtService;
 import pl.school.librus.user.UserEntity;
 import pl.school.librus.user.UserService;
 
@@ -71,5 +72,4 @@ public class JwtFilter extends OncePerRequestFilter {
             gotUser.getAuthorities()
         );
     }
-
 }

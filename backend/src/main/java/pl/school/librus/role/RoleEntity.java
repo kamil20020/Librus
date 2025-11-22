@@ -22,5 +22,4 @@ public class RoleEntity {
 
     @Column(nullable = false, unique = true)
     private String name;
-
 }

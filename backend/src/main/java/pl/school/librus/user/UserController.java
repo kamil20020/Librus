@@ -1,10 +1,11 @@
 package pl.school.librus.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.school.librus.security.AuthService;
+import pl.school.librus.user.api.request.RegisterUserRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -12,28 +13,18 @@ import pl.school.librus.security.AuthService;
 public class UserController {
 
     private final UserService userService;
-    private final AuthService authService;
 
-    @GetMapping("/login")
-    public ResponseEntity<LoggedResponse> login(@RequestBody UserCredentials userCredentials){
+    @PostMapping("/register")
+    public ResponseEntity<UserEntity> register(@RequestBody @Valid RegisterUserRequest request){
 
-        LoggedResponse response = authService.login(userCredentials);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping
-    public ResponseEntity<UserEntity> create(@RequestBody UserEntity user){
-
-        UserEntity createdUser = userService.create(user);
+        UserEntity createdUser = userService.register(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @GetMapping("/")
+    @GetMapping("/test")
     public ResponseEntity<String> test(){
 
         return ResponseEntity.ok("Test");
     }
-
 }

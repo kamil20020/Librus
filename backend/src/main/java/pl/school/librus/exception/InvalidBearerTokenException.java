@@ -8,5 +8,4 @@ public class InvalidBearerTokenException extends AuthenticationException {
 
         super(msg);
     }
-
 }
