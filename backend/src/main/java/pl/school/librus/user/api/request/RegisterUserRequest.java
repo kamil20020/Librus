@@ -25,5 +25,7 @@ public record RegisterUserRequest(
     String firstname,
 
     @NotBlank(message = "Nazwisko jest wymagane")
-    String surname
+    String surname,
+
+    String phone
 ) {}

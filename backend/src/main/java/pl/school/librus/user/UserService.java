@@ -45,6 +45,7 @@ public class UserService implements UserDetailsService {
             .email(request.email())
             .firstname(request.firstname())
             .surname(request.surname())
+            .phone(request.phone())
         .build();
 
         return userRepository.save(toCreateUser);
@@ -53,9 +54,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<UserEntity> foundUserOpt = userRepository.findByUsername(username);
-
-        return foundUserOpt
+        return userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found"));
     }
 }
