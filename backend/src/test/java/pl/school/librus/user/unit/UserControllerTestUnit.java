@@ -1,21 +1,15 @@
 package pl.school.librus.user.unit;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
+import jakarta.persistence.EntityExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,7 +21,7 @@ import pl.school.librus.user.UserEntity;
 import pl.school.librus.user.UserMapper;
 import pl.school.librus.user.UserService;
 import pl.school.librus.user.api.request.RegisterUserRequest;
-import pl.school.librus.user.api.response.LoggedUserResponse;
+import pl.school.librus.user.api.response.UserDetailsResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -75,13 +69,13 @@ class UserControllerTestUnit {
 
         UserEntity expectedUser = new UserEntity();
 
-        LoggedUserResponse expectedResponse = new LoggedUserResponse(
+        UserDetailsResponse expectedResponse = new UserDetailsResponse(
             "", "", "", "", "", "", ""
         );
 
         //when
         Mockito.when(userService.register(any())).thenReturn(expectedUser);
-        Mockito.when(userMapper.map(any())).thenReturn(expectedResponse);
+        Mockito.when(userMapper.map(any(UserEntity.class))).thenReturn(expectedResponse);
 
         MvcResult gotResult = mockMvc
             .perform(
@@ -94,7 +88,7 @@ class UserControllerTestUnit {
             .andReturn();
 
         String gotResponseStr = gotResult.getResponse().getContentAsString();
-        LoggedUserResponse gotResponse = objectMapper.readValue(gotResponseStr, LoggedUserResponse.class);
+        UserDetailsResponse gotResponse = objectMapper.readValue(gotResponseStr, UserDetailsResponse.class);
 
         //then
         assertNotNull(gotResponse);
@@ -107,7 +101,25 @@ class UserControllerTestUnit {
     @Test
     void shouldNotRegisterWithDuplicateUsername() throws Exception {
 
-        //when
+        //given
+        RegisterUserRequest request = new RegisterUserRequest(
+            "kamil", "KamilKamil1", "kamil@mail.com", "kamil", "nowak", "123"
+        );
+        String requestStr = objectMapper.writeValueAsString(request);
 
+        //when
+        Mockito.when(userService.register(any())).thenThrow(EntityExistsException.class);
+
+        mockMvc
+            .perform(
+                post(API_PREFIX + "/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestStr)
+            )
+            .andDo(print())
+            .andExpect(status().isConflict());
+
+        //then
+        Mockito.verify(userService).register(request);
     }
 }

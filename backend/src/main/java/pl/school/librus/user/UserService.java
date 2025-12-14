@@ -4,6 +4,9 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +31,25 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final UserMapper userMapper;
+
+    private static final int DEFAULT_PAGE_SIZE = 10;
+    private static final int MAX_PAGE_SIZE = 100;
+
+    public Page<UserEntity> getPage(Pageable pageable){
+
+        if(pageable == null){
+
+            pageable = PageRequest.of(0, DEFAULT_PAGE_SIZE);
+        }
+        else if(pageable.getPageSize() > MAX_PAGE_SIZE){
+
+            pageable = PageRequest.of(pageable.getPageNumber(), MAX_PAGE_SIZE);
+        }
+
+        return userRepository.findAll(pageable);
+    }
+
     public UserEntity register(RegisterUserRequest request) throws EntityExistsException{
 
         String username = request.username();
@@ -39,14 +61,8 @@ public class UserService implements UserDetailsService {
         String rawPassword = request.password();
         String encryptedPassword = passwordEncoder.encode(rawPassword);
 
-        UserEntity toCreateUser = UserEntity.builder()
-            .username(username)
-            .password(encryptedPassword)
-            .email(request.email())
-            .firstname(request.firstname())
-            .surname(request.surname())
-            .phone(request.phone())
-        .build();
+        UserEntity toCreateUser = userMapper.map(request);
+        toCreateUser.setPassword(encryptedPassword);
 
         return userRepository.save(toCreateUser);
     }

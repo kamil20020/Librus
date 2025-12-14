@@ -1,4 +1,4 @@
-package pl.school.librus.user;
+package pl.school.librus.user.unit;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,6 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.school.librus.user.UserEntity;
+import pl.school.librus.user.UserMapper;
+import pl.school.librus.user.UserRepository;
+import pl.school.librus.user.UserService;
 import pl.school.librus.user.api.request.RegisterUserRequest;
 
 import java.util.Optional;
@@ -28,6 +32,9 @@ class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private UserMapper userMapper;
 
     @InjectMocks
     private UserService userService;
@@ -47,6 +54,15 @@ class UserServiceTest {
             "nowak",
             "123"
         );
+
+        UserEntity expectedMapperUser = UserEntity.builder()
+            .username(request.username())
+            .password(request.password())
+            .email(request.email())
+            .firstname(request.firstname())
+            .surname(request.surname())
+            .phone(request.phone())
+            .build();
 
         UserEntity expectedRequestUser = UserEntity.builder()
             .username(request.username())
@@ -70,6 +86,7 @@ class UserServiceTest {
         //when
         Mockito.when(userRepository.existsByUsername(any())).thenReturn(false);
         Mockito.when(passwordEncoder.encode(any())).thenReturn(encryptedPassword);
+        Mockito.when(userMapper.map((any(RegisterUserRequest.class)))).thenReturn(expectedMapperUser);
         Mockito.when(userRepository.save(any())).thenReturn(expectedSavedUser);
 
         UserEntity newUser = userService.register(request);
@@ -77,6 +94,7 @@ class UserServiceTest {
         //then
         Mockito.verify(userRepository).existsByUsername(request.username());
         Mockito.verify(passwordEncoder).encode(rawPassword);
+        Mockito.verify(userMapper).map(request);
 
         ArgumentCaptor<UserEntity> toSaveUserCaptor = ArgumentCaptor.forClass(UserEntity.class);
         Mockito.verify(userRepository).save(toSaveUserCaptor.capture());
