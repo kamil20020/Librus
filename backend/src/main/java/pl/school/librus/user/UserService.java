@@ -2,6 +2,7 @@ package pl.school.librus.user;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import pl.school.librus.security.JwtService;
 import pl.school.librus.user.UserEntity;
 import pl.school.librus.user.UserRepository;
+import pl.school.librus.user.api.request.PatchUserRequest;
 import pl.school.librus.user.api.request.RegisterUserRequest;
 
 import java.util.Optional;
@@ -35,6 +37,12 @@ public class UserService implements UserDetailsService {
 
     private static final int DEFAULT_PAGE_SIZE = 10;
     private static final int MAX_PAGE_SIZE = 100;
+
+    public UserEntity getById(UUID id) throws EntityNotFoundException{
+
+        return userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Nie odnaleziono użytkownika o id " + id));
+    }
 
     public Page<UserEntity> getPage(Pageable pageable){
 
@@ -67,10 +75,63 @@ public class UserService implements UserDetailsService {
         return userRepository.save(toCreateUser);
     }
 
+    @Transactional
+    public UserEntity patchUser(UUID userId, PatchUserRequest request) throws EntityNotFoundException{
+
+        UserEntity gotUser = getById(userId);
+
+        if(request.username() != null){
+
+            if(userRepository.existsByUsername(request.username())){
+                throw new EntityExistsException("Istnieje już użytkownik o podanym loginie");
+            }
+
+            gotUser.setUsername(request.username());
+        }
+
+        if(request.password() != null){
+
+            String encryptedPassword = passwordEncoder.encode(request.password());
+            gotUser.setPassword(encryptedPassword);
+        }
+
+        if(request.email() != null){
+
+            gotUser.setEmail(request.email());
+        }
+
+        if(request.firstname() != null){
+
+            gotUser.setFirstname(request.firstname());
+        }
+
+        if(request.surname() != null){
+
+            gotUser.setSurname(request.surname());
+        }
+
+        if(request.phone() != null){
+
+            gotUser.setPhone(request.phone());
+        }
+
+        return gotUser;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         return userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found"));
+    }
+
+    @Transactional
+    public void deleteById(UUID userId){
+
+        if(!userRepository.existsById(userId)){
+            throw new EntityNotFoundException("Nie odnaleziono użytkownika o id " + userId);
+        }
+
+        userRepository.deleteById(userId);
     }
 }

@@ -7,8 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.school.librus.user.api.request.PatchUserRequest;
 import pl.school.librus.user.api.request.RegisterUserRequest;
 import pl.school.librus.user.api.response.UserDetailsResponse;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +21,16 @@ public class UserController {
     private final UserService userService;
 
     private final UserMapper userMapper;
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDetailsResponse> getById(@PathVariable("userId") String userIdStr){
+
+        UUID userId = UUID.fromString(userIdStr);
+        UserEntity gotUser = userService.getById(userId);
+        UserDetailsResponse response = userMapper.map(gotUser);
+
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping
     public ResponseEntity<Page<UserDetailsResponse>> getPage(Pageable pageable){
@@ -36,6 +49,25 @@ public class UserController {
         UserDetailsResponse response = userMapper.map(createdUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UserDetailsResponse> patchById(@PathVariable("userId") String userIdStr, @RequestBody PatchUserRequest request){
+
+        UUID userId = UUID.fromString(userIdStr);
+        UserEntity patchedUser = userService.patchUser(userId, request);
+        UserDetailsResponse response = userMapper.map(patchedUser);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteById(@PathVariable("userId") String userIdStr){
+
+        UUID userId = UUID.fromString(userIdStr);
+        userService.deleteById(userId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/test")

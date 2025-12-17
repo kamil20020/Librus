@@ -2,17 +2,33 @@ package pl.school.librus.user.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityExistsException;
+import jakarta.servlet.Filter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.filter.OncePerRequestFilter;
 import pl.school.librus.exception.GlobalExceptionHandler;
 import pl.school.librus.security.config.JwtFilter;
 import pl.school.librus.security.config.SecurityConfig;
@@ -23,20 +39,22 @@ import pl.school.librus.user.UserService;
 import pl.school.librus.user.api.request.RegisterUserRequest;
 import pl.school.librus.user.api.response.UserDetailsResponse;
 
+import java.util.UUID;
+import java.util.function.IntFunction;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import(SecurityConfig.class)
 @WebMvcTest(controllers = UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class UserControllerTestUnit {
 
-    private MockMvc mockMvc;
-
     @Autowired
-    private UserController userController;
+    private MockMvc mockMvc;
 
     @MockBean
     private UserService userService;
@@ -50,14 +68,6 @@ class UserControllerTestUnit {
     private static final String API_PREFIX = "/users";
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @BeforeEach
-    public void setUp(){
-
-        mockMvc = MockMvcBuilders.standaloneSetup(userController)
-            .setControllerAdvice(new GlobalExceptionHandler())
-            .build();
-    }
-
     @Test
     void shouldRegister() throws Exception {
 
@@ -70,7 +80,7 @@ class UserControllerTestUnit {
         UserEntity expectedUser = new UserEntity();
 
         UserDetailsResponse expectedResponse = new UserDetailsResponse(
-            "", "", "", "", "", "", ""
+            "", "", "", "", "", ""
         );
 
         //when
