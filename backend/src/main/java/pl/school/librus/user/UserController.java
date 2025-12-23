@@ -7,10 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.school.librus.role.RoleEntity;
+import pl.school.librus.role.RoleService;
 import pl.school.librus.user.api.request.PatchUserRequest;
 import pl.school.librus.user.api.request.RegisterUserRequest;
 import pl.school.librus.user.api.response.UserDetailsResponse;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -19,6 +23,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
     private final UserMapper userMapper;
 
@@ -42,6 +47,15 @@ public class UserController {
         return ResponseEntity.ok(foundUsersResponsePage);
     }
 
+    @GetMapping("/{userId}/roles")
+    public ResponseEntity<Set<RoleEntity>> getUserRolesPage(@PathVariable("userId") String userIdStr){
+
+        UUID userId = UUID.fromString(userIdStr);
+        Set<RoleEntity> gotRoles = userService.getUserRoles(userId);
+
+        return ResponseEntity.ok(gotRoles);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<UserDetailsResponse> register(@RequestBody @Valid RegisterUserRequest request){
 
@@ -49,6 +63,22 @@ public class UserController {
         UserDetailsResponse response = userMapper.map(createdUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/{userId}/roles/{roleId}")
+    public ResponseEntity<RoleEntity> assignRoleToUser(@PathVariable("userId") UUID userId, @PathVariable("roleId") UUID roleId){
+
+        RoleEntity addedRole = roleService.assignRoleToUser(roleId, userId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedRole);
+    }
+
+    @DeleteMapping("/{userId}/roles/{roleId}")
+    public ResponseEntity<Void> removeRoleFromUser(@PathVariable("userId") UUID userId, @PathVariable("roleId") UUID roleId){
+
+        roleService.removeRoleFromUser(roleId, userId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PatchMapping("/{userId}")

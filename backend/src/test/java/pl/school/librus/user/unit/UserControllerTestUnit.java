@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.school.librus.exception.GlobalExceptionHandler;
+import pl.school.librus.role.RoleService;
 import pl.school.librus.security.config.JwtFilter;
 import pl.school.librus.security.config.SecurityConfig;
 import pl.school.librus.user.UserController;
@@ -61,6 +62,9 @@ class UserControllerTestUnit {
 
     @MockBean
     private UserMapper userMapper;
+
+    @MockBean
+    private RoleService roleService;
 
     @MockBean
     private JwtFilter jwtFilter;

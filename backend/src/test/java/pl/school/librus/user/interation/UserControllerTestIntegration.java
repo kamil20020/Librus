@@ -22,6 +22,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import pl.school.librus.RestPage;
+import pl.school.librus.role.RoleEntity;
+import pl.school.librus.role.RoleRepository;
+import pl.school.librus.role.RoleService;
 import pl.school.librus.security.AuthService;
 import pl.school.librus.security.api.request.LoginRequest;
 import pl.school.librus.security.api.response.LoggedUserTokensResponse;
@@ -32,6 +35,7 @@ import pl.school.librus.user.UserService;
 import pl.school.librus.user.api.request.PatchUserRequest;
 import pl.school.librus.user.api.response.UserDetailsResponse;
 
+import javax.management.relation.Role;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,6 +65,12 @@ public class UserControllerTestIntegration {
     private AuthService authService;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private String testAccessToken;
@@ -72,6 +82,7 @@ public class UserControllerTestIntegration {
         RestAssured.port = port;
 
         userRepository.deleteAll();
+        roleRepository.deleteAll();
     }
 
     private void loadAccessTokenWithUser(){
@@ -199,6 +210,146 @@ public class UserControllerTestIntegration {
 
             assertEquals(expectedUserResponse, gotUserResponse);
         }
+    }
+
+    @Test
+    public void shouldGetUserRoles(){
+
+        //given
+        RoleEntity studentRole = new RoleEntity("STUDENT");
+        studentRole = roleRepository.save(studentRole);
+
+        RoleEntity adminRole = new RoleEntity("ADMIN");
+        adminRole = roleRepository.save(adminRole);
+
+        RoleEntity teacherRole = new RoleEntity("TEACHER");
+        teacherRole = roleRepository.save(teacherRole);
+
+        UserEntity user = UserEntity.builder()
+            .username("adam.nowak")
+            .password("password")
+            .firstname("adam")
+            .surname("nowak")
+            .email("adam@mail.com")
+            .phone("123")
+            .build();
+        user = userRepository.save(user);
+        roleService.assignRoleToUser(studentRole.getId(), user.getId());
+        roleService.assignRoleToUser(adminRole.getId(), user.getId());
+
+        List<RoleEntity> expectedRoles = List.of(studentRole, adminRole);
+
+        loadAccessTokenWithUser();
+
+        //when
+        List<RoleEntity> gotRoles = RestAssured
+            .given()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + testAccessToken)
+                .pathParam("userId", user.getId().toString())
+            .when()
+                .get("/{userId}/roles")
+            .then()
+                .statusCode(200)
+                .extract()
+                .as(new TypeRef<List<RoleEntity>>(){});
+
+        //then
+        assertNotNull(gotRoles);
+        assertEquals(expectedRoles.size(), gotRoles.size());
+        assertTrue(gotRoles.containsAll(expectedRoles));
+    }
+
+    @Test
+    public void shouldAssignRoleToUser(){
+
+        //given
+        RoleEntity studentRole = new RoleEntity("STUDENT");
+        studentRole = roleRepository.save(studentRole);
+
+        RoleEntity adminRole = new RoleEntity("ADMIN");
+        adminRole = roleRepository.save(adminRole);
+
+        RoleEntity teacherRole = new RoleEntity("TEACHER");
+        teacherRole = roleRepository.save(teacherRole);
+
+        UserEntity user = UserEntity.builder()
+            .username("adam.nowak")
+            .password("password")
+            .firstname("adam")
+            .surname("nowak")
+            .email("adam@mail.com")
+            .phone("123")
+            .build();
+        user = userRepository.save(user);
+        roleService.assignRoleToUser(studentRole.getId(), user.getId());
+
+        List<RoleEntity> expectedRoles = List.of(studentRole, adminRole);
+
+        loadAccessTokenWithUser();
+
+        //when
+        RoleEntity addedRole = RestAssured
+            .given()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + testAccessToken)
+                .pathParam("userId", user.getId().toString())
+                .pathParam("roleId", adminRole.getId().toString())
+            .when()
+                .post("/{userId}/roles/{roleId}")
+            .then()
+                .statusCode(201)
+                .extract()
+                .as(RoleEntity.class);
+
+        //then
+        assertNotNull(addedRole);
+        assertEquals(adminRole, addedRole);
+
+        user = userRepository.findById(user.getId()).get();
+        assertEquals(expectedRoles.size(), user.getRoles().size());
+        assertTrue(expectedRoles.contains(addedRole));
+    }
+
+    @Test
+    public void shouldRemoveRoleFromUser(){
+
+        //given
+        RoleEntity studentRole = new RoleEntity("STUDENT");
+        studentRole = roleRepository.save(studentRole);
+
+        RoleEntity adminRole = new RoleEntity("ADMIN");
+        adminRole = roleRepository.save(adminRole);
+
+        UserEntity user = UserEntity.builder()
+            .username("adam.nowak")
+            .password("password")
+            .firstname("adam")
+            .surname("nowak")
+            .email("adam@mail.com")
+            .phone("123")
+            .build();
+        user = userRepository.save(user);
+        roleService.assignRoleToUser(studentRole.getId(), user.getId());
+        roleService.assignRoleToUser(adminRole.getId(), user.getId());
+
+        List<RoleEntity> expectedRoles = List.of(adminRole);
+
+        loadAccessTokenWithUser();
+
+        //when
+        RestAssured
+            .given()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + testAccessToken)
+                .pathParam("userId", user.getId().toString())
+                .pathParam("roleId", studentRole.getId().toString())
+            .when()
+                .delete("/{userId}/roles/{roleId}")
+            .then()
+                .statusCode(204);
+
+        //then
+        user = userRepository.findById(user.getId()).get();
+        assertEquals(expectedRoles.size(), user.getRoles().size());
+        assertFalse(expectedRoles.contains(studentRole));
     }
 
     @Test

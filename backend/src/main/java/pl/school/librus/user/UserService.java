@@ -15,13 +15,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.school.librus.role.RoleEntity;
 import pl.school.librus.security.JwtService;
 import pl.school.librus.user.UserEntity;
 import pl.school.librus.user.UserRepository;
 import pl.school.librus.user.api.request.PatchUserRequest;
 import pl.school.librus.user.api.request.RegisterUserRequest;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -35,6 +38,7 @@ public class UserService implements UserDetailsService {
 
     private final UserMapper userMapper;
 
+    private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_PAGE_SIZE = 10;
     private static final int MAX_PAGE_SIZE = 100;
 
@@ -48,7 +52,7 @@ public class UserService implements UserDetailsService {
 
         if(pageable == null){
 
-            pageable = PageRequest.of(0, DEFAULT_PAGE_SIZE);
+            pageable = PageRequest.of(DEFAULT_PAGE, DEFAULT_PAGE_SIZE);
         }
         else if(pageable.getPageSize() > MAX_PAGE_SIZE){
 
@@ -56,6 +60,13 @@ public class UserService implements UserDetailsService {
         }
 
         return userRepository.findAll(pageable);
+    }
+
+    public Set<RoleEntity> getUserRoles(UUID userId) throws EntityNotFoundException{
+
+        UserEntity gotUser = getById(userId);
+
+        return gotUser.getRoles();
     }
 
     public UserEntity register(RegisterUserRequest request) throws EntityExistsException{
