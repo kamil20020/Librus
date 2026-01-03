@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.school.librus.person.PersonEntity;
 import pl.school.librus.role.RoleEntity;
 
 import java.util.*;
@@ -40,6 +41,10 @@ public class UserEntity implements UserDetails {
 
     @Column
     private String phone;
+
+    @JoinColumn(name = "person_id")
+    @OneToOne
+    private PersonEntity person;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

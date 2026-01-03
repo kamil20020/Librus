@@ -1,4 +1,4 @@
-package pl.school.librus.user;
+package pl.school.librus.user.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.school.librus.role.RoleEntity;
 import pl.school.librus.role.RoleService;
+import pl.school.librus.user.UserEntity;
+import pl.school.librus.user.UserMapper;
+import pl.school.librus.user.UserService;
 import pl.school.librus.user.api.request.PatchUserRequest;
 import pl.school.librus.user.api.request.RegisterUserRequest;
 import pl.school.librus.user.api.response.UserDetailsResponse;

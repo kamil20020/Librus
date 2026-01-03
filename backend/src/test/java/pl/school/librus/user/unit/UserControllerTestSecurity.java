@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.school.librus.user.UserController;
 import pl.school.librus.user.UserMapper;
 import pl.school.librus.user.UserService;
 
