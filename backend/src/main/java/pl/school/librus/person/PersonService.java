@@ -17,6 +17,7 @@ import pl.school.librus.user.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,6 +33,12 @@ public class PersonService {
     private static final int DEFAULT_PAGE_NUMBER = 0;
     private static final int DEFAULT_PAGE_SIZE = 10;
     private static final int MAX_PAGE_SIZE = 100;
+
+    public PersonEntity getById(UUID personId) throws EntityNotFoundException{
+
+        return personRepository.findById(personId)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono danych osobowych o id " + personId));
+    }
 
     public Page<PersonEntity> getPage(SearchPersonRequest request, Pageable pageable){
 
@@ -64,7 +71,9 @@ public class PersonService {
 
         if(isNotNullAndNotBlank(request.phone())){
 
-            specifications.add(PersonSpecification.personAboutPhone(request.phone()));
+            String newPhone = PersonEntity.clearPhone(request.phone());
+
+            specifications.add(PersonSpecification.personAboutPhone(newPhone));
         }
 
         if(isNotNullAndNotBlank(request.city())){
@@ -86,20 +95,28 @@ public class PersonService {
                     Specification.allOf(
                         PersonSpecification.personAboutFirstname(words[1]),
                         PersonSpecification.personAboutSurname(words[0])
-                    )
+                    ),
+                    PersonSpecification.personAboutPhone(PersonEntity.clearPhone(request.searchText()))
                 );
 
                 specifications.add(specification);
             }
-            else{
+            else if(words.length == 1){
 
                 String word = words[0];
 
                 Specification<PersonEntity> specification = Specification.anyOf(
                     PersonSpecification.personAboutFirstname(word),
                     PersonSpecification.personAboutSurname(word),
-                    PersonSpecification.personAboutPhone(word)
+                    PersonSpecification.personAboutPhone(PersonEntity.clearPhone(word))
                 );
+
+                specifications.add(specification);
+            }
+            else{
+
+                String clearedPhone = PersonEntity.clearPhone(request.searchText());
+                Specification<PersonEntity> specification = PersonSpecification.personAboutPhone(clearedPhone);
 
                 specifications.add(specification);
             }
@@ -111,14 +128,18 @@ public class PersonService {
     @Transactional
     public PersonEntity create(CreatePersonRequest request){
 
+        UserEntity loggedUser = authService.getLoggedUser();
+
         PersonAddress address = personMapper.map(request.address());
+
         PersonEntity newPerson = PersonEntity.builder()
             .firstname(request.firstname())
             .surname(request.surname())
             .email(request.email())
             .phone(request.phone())
+            .user(loggedUser)
+            .address(address)
             .build();
-        newPerson.setAddress(address);
 
         return create(newPerson);
     }
@@ -130,7 +151,7 @@ public class PersonService {
 
         PersonEntity savedPerson = personRepository.save(newPerson);
 
-        loggedUser.setPerson(savedPerson);
+        savedPerson.setUser(loggedUser);
 
         return savedPerson;
     }
@@ -138,14 +159,16 @@ public class PersonService {
     @Transactional
     public PersonEntity patch(PatchPersonRequest request) throws IllegalStateException{
 
-        UserEntity loggedUser = authService.getLoggedUser();
+        UUID loggedUserId = authService.getLoggedUser().getId();
 
-        if(loggedUser.getPerson() == null){
+        Optional<PersonEntity> foundPersonOpt = personRepository.findByUserId(loggedUserId);
+
+        if(foundPersonOpt.isEmpty()){
 
             throw new IllegalStateException("Użytkownik nie ma podanych danych osobowych");
         }
 
-        PersonEntity person = loggedUser.getPerson();
+        PersonEntity person = foundPersonOpt.get();
 
         if(isNotNullAndNotBlank(request.firstname())){
 
@@ -154,17 +177,17 @@ public class PersonService {
 
         if(isNotNullAndNotBlank(request.surname())){
 
-            person.setFirstname(request.surname());
+            person.setSurname(request.surname());
         }
 
         if(isNotNullAndNotBlank(request.email())){
 
-            person.setFirstname(request.email());
+            person.setEmail(request.email());
         }
 
         if(isNotNullAndNotBlank(request.phone())){
 
-            person.setFirstname(request.phone());
+            person.setPhone(request.phone());
         }
 
         if(request.address() != null){
@@ -188,27 +211,27 @@ public class PersonService {
 
         if(isNotNullAndNotBlank(request.street())){
 
-            address.setCity(request.street());
+            address.setStreet(request.street());
         }
 
         if(isNotNullAndNotBlank(request.postCode())){
 
-            address.setCity(request.postCode());
+            address.setPostCode(request.postCode());
         }
 
         if(isNotNullAndNotBlank(request.buildingNumber())){
 
-            address.setCity(request.buildingNumber());
+            address.setBuildingNumber(request.buildingNumber());
         }
 
         if(isNotNullAndNotBlank(request.buildingFloor())){
 
-            address.setCity(request.buildingFloor());
+            address.setBuildingFloor(request.buildingFloor());
         }
 
         if(isNotNullAndNotBlank(request.doorCode())){
 
-            address.setCity(request.doorCode());
+            address.setDoorCode(request.doorCode());
         }
 
         return address;

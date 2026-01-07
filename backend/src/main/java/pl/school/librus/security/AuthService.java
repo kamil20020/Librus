@@ -37,7 +37,7 @@ public class AuthService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return (UserEntity) authentication;
+        return (UserEntity) authentication.getPrincipal();
     }
 
     public LoggedUserTokensResponse login(LoginRequest request) throws AuthenticationException {
@@ -53,6 +53,6 @@ public class AuthService {
         String accessToken = jwtService.getAccessToken(gotUser);
         String refreshToken = jwtService.generateRefreshToken(gotUser.getId().toString(), gotUser.getUsername());
 
-        return new LoggedUserTokensResponse(accessToken, refreshToken, gotUser.getPerson() != null);
+        return new LoggedUserTokensResponse(accessToken, refreshToken);
     }
 }

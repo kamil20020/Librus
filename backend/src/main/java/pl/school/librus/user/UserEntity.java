@@ -42,10 +42,6 @@ public class UserEntity implements UserDetails {
     @Column
     private String phone;
 
-    @JoinColumn(name = "person_id")
-    @OneToOne
-    private PersonEntity person;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "USERS_ROLES",

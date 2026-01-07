@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.school.librus.person.PersonEntity;
+import pl.school.librus.person.PersonMapper;
 import pl.school.librus.person.PersonService;
 import pl.school.librus.person.api.request.person.CreatePersonRequest;
 import pl.school.librus.person.api.request.person.PatchPersonRequest;
 import pl.school.librus.person.api.request.person.SearchPersonRequest;
+import pl.school.librus.person.api.response.PersonResponse;
 
 import java.util.UUID;
 
@@ -22,28 +24,33 @@ public class PersonController {
 
     private final PersonService personService;
 
-    @GetMapping
-    public ResponseEntity<Page<PersonEntity>> getPage(@RequestBody SearchPersonRequest request, Pageable pageable){
+    private final PersonMapper personMapper;
+
+    @PostMapping("/search")
+    public ResponseEntity<Page<PersonResponse>> getPage(@RequestBody SearchPersonRequest request, Pageable pageable){
 
         Page<PersonEntity> foundPersons = personService.getPage(request, pageable);
+        Page<PersonResponse> foundPersonsResponse = foundPersons.map(person -> personMapper.map(person));
 
-        return ResponseEntity.ok(foundPersons);
+        return ResponseEntity.ok(foundPersonsResponse);
     }
 
     @PostMapping
-    public ResponseEntity<PersonEntity> create(@RequestBody @Valid CreatePersonRequest request){
+    public ResponseEntity<PersonResponse> create(@RequestBody @Valid CreatePersonRequest request){
 
         PersonEntity createdPerson = personService.create(request);
+        PersonResponse personResponse = personMapper.map(createdPerson);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdPerson);
+        return ResponseEntity.status(HttpStatus.CREATED).body(personResponse);
     }
 
     @PatchMapping
-    public ResponseEntity<PersonEntity> patch(@RequestBody @Valid PatchPersonRequest request){
+    public ResponseEntity<PersonResponse> patch(@RequestBody @Valid PatchPersonRequest request){
 
         PersonEntity patchedPerson = personService.patch(request);
+        PersonResponse personResponse = personMapper.map(patchedPerson);
 
-        return ResponseEntity.ok(patchedPerson);
+        return ResponseEntity.ok(personResponse);
     }
 
     @DeleteMapping("/{personId}")

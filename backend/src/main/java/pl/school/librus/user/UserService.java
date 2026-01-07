@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.school.librus.person.PersonEntity;
+import pl.school.librus.person.PersonService;
 import pl.school.librus.role.RoleEntity;
 import pl.school.librus.security.JwtService;
 import pl.school.librus.user.UserEntity;
@@ -87,7 +89,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserEntity patchUser(UUID userId, PatchUserRequest request) throws EntityNotFoundException{
+    public UserEntity patchUser(UUID userId, PatchUserRequest request) throws EntityNotFoundException, IllegalArgumentException{
 
         UserEntity gotUser = getById(userId);
 
