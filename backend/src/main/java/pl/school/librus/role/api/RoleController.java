@@ -1,4 +1,4 @@
-package pl.school.librus.role;
+package pl.school.librus.role.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.school.librus.role.RoleEntity;
+import pl.school.librus.role.RoleService;
 import pl.school.librus.role.api.request.CreateRoleRequest;
 import pl.school.librus.role.api.request.PatchRoleRequest;
 import pl.school.librus.user.UserEntity;
