@@ -50,3 +50,34 @@ Prosta aplikacja webowa dla nauki skupiona przede wszystkim na możliwości wyst
     <img src="erd.png">
 <p>
 
+## Postępy:
+
+### Backend:
+
+#### Użytkownicy
+<p align="center">
+    <img src="postepy/backend/user.png">
+<p>
+
+#### Role
+<p align="center">
+    <img src="postepy/backend/role.png">
+<p>
+
+#### Osoby
+<p align="center">
+    <img src="postepy/backend/person.png">
+<p>
+
+#### Bezpieczeństwo
+<p align="center">
+    <img src="postepy/backend/auth.png">
+<p>
+
+
+### Frontend
+
+<p align="center">
+    <img src="postepy/frontend.png">
+<p>
+
