@@ -2,7 +2,6 @@ services:
   librus-db:
     container_name: librus-db
     image: postgres:13-alpine
-
     restart: always
     environment:
       POSTGRES_DB: librus
@@ -12,3 +11,14 @@ services:
       - "5432:5432"
     volumes:
       - ./db-data:/var/lib/postgresql
+
+  backend:
+    container_name: librus-backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://librus-db:5432/librus
+    ports:
+      - "9000:9000"
