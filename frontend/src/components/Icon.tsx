@@ -1,16 +1,15 @@
 ﻿import React from "react";
+import "./components.css";
 
 const Icon = (props: {
     code: string,
     className?: string,
-    style: React.CSSProperties
+    style?: React.CSSProperties
 }) => {
 
     return (
         <span className={`material-symbols-outlined icon ${props.className}`}
             style={{
-                color: 'var(--primary-color)',
-                backgroundColor: 'var(--secondary-color)',
                 ...props.style
             }}
         >

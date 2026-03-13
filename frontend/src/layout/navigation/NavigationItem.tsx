@@ -8,27 +8,14 @@ const NavigationItem = (props: {
 }) => {
 
     return (
-        <div
-            className="navigation-item"
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center"
-            }}
-        >
-            <NavLink to={props.pathTo}>
-                 <NavigationItemIcon code={props.iconCode}/>
-            </NavLink>
-            <span
-                className="navigation-item-text"
-                style={{
-                    color: 'var(--primary-color)',
-                    fontWeight: 800
-                }}
-            >
-                {props.text}
-            </span>
-        </div>
+         <NavLink to={props.pathTo}>
+            <div className="navigation-item">
+                <NavigationItemIcon code={props.iconCode}/>
+                <span className="navigation-item-text">
+                    {props.text}
+                </span>
+            </div>
+        </NavLink>
     )
 }
 
