@@ -1,9 +1,11 @@
-﻿const Register = () => {
+﻿import SimplePage from "../layout/SimplePage";
+
+const Register = () => {
 
     return (
-        <div>
-            Rejestracja
-        </div>
+        <SimplePage
+            title="Rejestracja"
+        />
     )
 }
 

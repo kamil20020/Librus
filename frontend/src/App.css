@@ -1,3 +1,76 @@
 .App {
   text-align: center;
 }
+
+button{
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: var(--text-size-large);
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border: none;
+}
+
+button:hover{
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+button:active{
+  opacity: 0.85;
+}
+
+.button-action{
+  background-color: var(--action-color);
+  color: var(--secondary-color);
+}
+
+.button-success{
+  background-color: var(--success-color);
+  color: var(--secondary-color);
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover{
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 32px;
+}
+
+input{
+  padding: 10px 16px;
+  font-size: var(--text-size-huge);
+  outline: none;
+  border-radius: 12px;
+  border: 2px solid silver;
+}
+
+input:hover{
+  opacity: 0.6;
+}
+
+input:focus{
+  border: 2px solid var(--primary-color);
+  opacity: 1;
+}
+
+.primary{
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.secondary{
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}

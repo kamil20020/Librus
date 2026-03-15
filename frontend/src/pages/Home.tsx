@@ -2,7 +2,7 @@
 
     return (
         <div>
-            
+            Strona główna
         </div>
     )
 }

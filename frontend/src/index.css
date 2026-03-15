@@ -1,6 +1,12 @@
 :root{
   --primary-color: #36454F;
   --secondary-color: white;
+  --success-color: rgb(5, 149, 5);
+  --action-color: #028ae1;;
+  --text-size-normal: 12px;
+  --text-size-large: 14px;
+  --text-size-huge: 16px;
+  --text-size-super-huge: 22px;
 }
 
 html{

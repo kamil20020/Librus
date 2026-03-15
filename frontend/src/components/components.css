@@ -2,3 +2,14 @@
     color: var(--primary-color);
     background-color: var(--secondary-color);
 }
+
+.form-element{
+    width: 100%;
+    color: var(--primary-color);
+    font-size: var(--text-size-huge);
+    font-weight: 500;
+    display: flex;
+    column-gap: 22px;
+    align-items: center;
+    justify-content: space-between;
+}
