@@ -2,6 +2,7 @@
 import ValidatedInput from "./ValidatedInput";
 import Validator from "../../features/auth/validation/Validator";
 import FormValidateService from "../../services/FormValidateService";
+import { transpileModule } from "typescript";
 
 export interface FormElementProps{
     isRequired?: boolean,
@@ -32,27 +33,14 @@ const Form = <F extends Base, E extends Base,>(props: {
 
         const newErrors: E = {...props.initialErrors};
 
-        const formKeys: string[] = Object.keys(form);
         const formValues: any[] = Object.values(form);
 
         let isFormValid: boolean = true;
 
         for(let formElementIndex = 0; formElementIndex < formValues.length; formElementIndex++){
 
-            const formKey = formKeys[formElementIndex]
-            const formValue = formValues[formElementIndex];
-            const field = props.elements[formElementIndex] as FormElementProps;
- 
-            if(!field.isValidated || !field.validations){
-                continue;
-            }
+            if(!validateFormField(formElementIndex, newErrors)){
 
-            try{
-                FormValidateService.validateFieldWithValidators(formValue, field.validations);
-            }
-            catch(rawError: any){
-                const error = rawError as Error;
-                newErrors[formKey as keyof E] = error.message as any;
                 isFormValid = false;
             }
         }
@@ -60,6 +48,32 @@ const Form = <F extends Base, E extends Base,>(props: {
         setErrors(newErrors);
 
         return isFormValid;
+    }
+
+    const validateFormField = (formElementIndex: number, newErrors: E): boolean => {
+
+        const formKeys: string[] = Object.keys(form);
+        const formValues: any[] = Object.values(form);
+
+        const formKey = formKeys[formElementIndex]
+        const formValue = formValues[formElementIndex];
+        const field = props.elements[formElementIndex] as FormElementProps;
+ 
+        if(!field.isValidated || !field.validations){
+            return true;
+        }
+
+        try{
+            FormValidateService.validateFieldWithValidators(formValue, field.validations);
+        }
+        catch(rawError: any){
+            const error = rawError as Error;
+            newErrors[formKey as keyof E] = error.message as any;
+           
+            return false;
+        }
+
+        return true;
     }
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -78,6 +92,7 @@ const Form = <F extends Base, E extends Base,>(props: {
         const fieldKey: string = Object.keys(form)[index]
         const fieldValue: string = Object.values(form)[index];
         const errorValue: string = errors[fieldKey as keyof E] as string;
+
         return(
             <ValidatedInput
                 key={props.inputId}
