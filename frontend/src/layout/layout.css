@@ -29,6 +29,7 @@
     justify-content: center;
     align-items: center;
     row-gap: 32px;
+    width: 22%;
 }
 
 header{

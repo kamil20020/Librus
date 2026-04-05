@@ -5,11 +5,30 @@
 
 .form-element{
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    flex-direction: row;
+    row-gap: 2px;
     color: var(--primary-color);
     font-size: var(--text-size-huge);
     font-weight: 500;
+}
+
+.form-element-content{
     display: flex;
-    column-gap: 22px;
     align-items: center;
-    justify-content: space-between;
+    column-gap: 6px;
+}
+
+.required-field{
+    color: var(--error-color);
+    font-size: var(--text-size-huge);
+}
+
+.error-message{
+    color: var(--error-color);
+    font-size: var(--text-size-huge);
+    grid-column: 2;
+    justify-self: center;
 }

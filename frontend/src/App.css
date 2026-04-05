@@ -45,7 +45,7 @@ form{
   display: flex;
   flex-direction: column;
   align-items: center;
-  row-gap: 32px;
+  row-gap: 26px;
 }
 
 input{
