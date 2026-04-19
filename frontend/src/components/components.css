@@ -26,6 +26,11 @@
     font-size: var(--text-size-huge);
 }
 
+.error-field,
+.error-field:focus{
+    border-color: var(--error-color);
+}
+
 .error-message{
     color: var(--error-color);
     font-size: var(--text-size-huge);

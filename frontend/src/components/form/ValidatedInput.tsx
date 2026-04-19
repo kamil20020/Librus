@@ -18,6 +18,7 @@ const ValidatedInput = (props: ValidatedInputProps) => {
             <label htmlFor={props.inputId}>{props.labelValue}:</label>
             <div className="form-element-content">
                 <input
+                    className={props.errorMessage ? "error-field": ""}
                     type={props.type ? props.type : "text"}
                     name={props.inputId}
                     placeholder={props.placeholder}

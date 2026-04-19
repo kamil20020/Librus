@@ -1,4 +1,4 @@
-﻿import Validator from "../features/auth/validation/Validator";
+﻿import Validator from "../components/form/validation/Validator";
 
 class FormValidateService {
 

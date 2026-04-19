@@ -1,6 +1,6 @@
 ﻿import { FormEvent, useState } from "react";
 import ValidatedInput from "./ValidatedInput";
-import Validator from "../../features/auth/validation/Validator";
+import Validator from "./validation/Validator";
 import FormValidateService from "../../services/FormValidateService";
 import { transpileModule } from "typescript";
 
