@@ -21,11 +21,5 @@ public record RegisterUserRequest(
     @NotBlank(message = "Adres e-mail jest wymagany")
     String email,
 
-    @NotBlank(message = "Imię jest wymagane")
-    String firstname,
-
-    @NotBlank(message = "Nazwisko jest wymagane")
-    String surname,
-
     String phone
 ) {}

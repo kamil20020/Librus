@@ -23,8 +23,6 @@ class UserMapperTest {
             .id(UUID.randomUUID())
             .username("kamil")
             .email("kamil@mail.com")
-            .firstname("kamil")
-            .surname("nowak")
             .phone("123")
             .build();
 
@@ -36,8 +34,6 @@ class UserMapperTest {
         assertEquals(user.getId().toString(), gotResponse.id());
         assertEquals(user.getUsername(), gotResponse.username());
         assertEquals(user.getEmail(), gotResponse.email());
-        assertEquals(user.getFirstname(), gotResponse.firstname());
-        assertEquals(user.getSurname(), gotResponse.surname());
         assertEquals(user.getPhone(), gotResponse.phone());
     }
 
@@ -60,8 +56,6 @@ class UserMapperTest {
             "kamil",
             "password",
             "kamil@mail.com",
-            "kamil",
-            "nowak",
             "123"
         );
 
@@ -73,8 +67,6 @@ class UserMapperTest {
         assertEquals(request.username(), gotUser.getUsername());
         assertEquals(request.email(), gotUser.getEmail());
         assertEquals(request.password(), gotUser.getPassword());
-        assertEquals(request.firstname(), gotUser.getFirstname());
-        assertEquals(request.surname(), gotUser.getSurname());
         assertEquals(request.phone(), gotUser.getPhone());
     }
 

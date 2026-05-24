@@ -5,7 +5,6 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.school.librus.person.PersonEntity;
 import pl.school.librus.role.RoleEntity;
 
 import java.util.*;
@@ -32,12 +31,6 @@ public class UserEntity implements UserDetails {
 
     @Column(nullable = false)
     private String email;
-
-    @Column(nullable = false)
-    private String firstname;
-
-    @Column(nullable = false)
-    private String surname;
 
     @Column
     private String phone;
@@ -107,8 +100,6 @@ public class UserEntity implements UserDetails {
         if (!Objects.equals(username, that.username)) return false;
         if (!Objects.equals(password, that.password)) return false;
         if (!Objects.equals(email, that.email)) return false;
-        if (!Objects.equals(firstname, that.firstname)) return false;
-        if (!Objects.equals(surname, that.surname)) return false;
 
         return Objects.equals(phone, that.phone);
     }
@@ -119,8 +110,6 @@ public class UserEntity implements UserDetails {
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
-        result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         return result;
     }

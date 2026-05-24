@@ -54,14 +54,14 @@ class UserControllerTestUnit {
 
         //given
         RegisterUserRequest request = new RegisterUserRequest(
-            "kamil", "KamilKamil1", "kamil@mail.com", "kamil", "nowak", "123"
+            "kamil", "KamilKamil1", "kamil@mail.com", "123"
         );
         String requestStr = objectMapper.writeValueAsString(request);
 
         UserEntity expectedUser = new UserEntity();
 
         UserDetailsResponse expectedResponse = new UserDetailsResponse(
-            "", "", "", "", "", ""
+            "", "", "", ""
         );
 
         //when
@@ -94,7 +94,7 @@ class UserControllerTestUnit {
 
         //given
         RegisterUserRequest request = new RegisterUserRequest(
-            "kamil", "KamilKamil1", "kamil@mail.com", "kamil", "nowak", "123"
+            "kamil", "KamilKamil1", "kamil@mail.com", "123"
         );
         String requestStr = objectMapper.writeValueAsString(request);
 

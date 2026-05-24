@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import pl.school.librus.user.UserEntity;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -62,13 +63,13 @@ public class PersonEntity {
 
         PersonEntity person = (PersonEntity) o;
 
-        if (id != null ? !id.equals(person.id) : person.id != null) return false;
-        if (firstname != null ? !firstname.equals(person.firstname) : person.firstname != null) return false;
-        if (surname != null ? !surname.equals(person.surname) : person.surname != null) return false;
-        if (email != null ? !email.equals(person.email) : person.email != null) return false;
-        if (phone != null ? !phone.equals(person.phone) : person.phone != null) return false;
+        if (!Objects.equals(id, person.id)) return false;
+        if (!Objects.equals(firstname, person.firstname)) return false;
+        if (!Objects.equals(surname, person.surname)) return false;
+        if (!Objects.equals(email, person.email)) return false;
+        if (!Objects.equals(phone, person.phone)) return false;
 
-        return address != null ? address.equals(person.address) : person.address == null;
+        return Objects.equals(address, person.address);
     }
 
     @Override

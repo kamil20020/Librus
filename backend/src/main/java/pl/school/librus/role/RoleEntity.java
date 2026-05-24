@@ -3,6 +3,7 @@ package pl.school.librus.role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @ToString
@@ -38,11 +39,11 @@ public class RoleEntity {
 
         RoleEntity that = (RoleEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) {
+        if (!Objects.equals(id, that.id)) {
             return false;
         }
 
-        return name != null ? name.equals(that.name) : that.name == null;
+        return Objects.equals(name, that.name);
     }
 
     @Override

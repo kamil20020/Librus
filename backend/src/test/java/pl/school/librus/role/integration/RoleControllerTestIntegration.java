@@ -85,8 +85,6 @@ class RoleControllerTestIntegration {
         UserEntity loggedUser = UserEntity.builder()
             .username("user")
             .password(encryptedPassword)
-            .firstname("user")
-            .surname("user")
             .email("user@mail.com")
             .phone("123456")
             .build();
@@ -146,8 +144,6 @@ class RoleControllerTestIntegration {
         UserEntity student = UserEntity.builder()
             .username("adam.nowak")
             .password("password")
-            .firstname("adam")
-            .surname("nowak")
             .email("adam@mail.com")
             .phone("123")
             .build();
@@ -157,8 +153,6 @@ class RoleControllerTestIntegration {
         UserEntity student1 = UserEntity.builder()
             .username("jan.kowalski")
             .password("password1")
-            .firstname("jan")
-            .surname("kowalski")
             .email("jan@mail.com")
             .phone("123456")
             .build();
@@ -168,8 +162,6 @@ class RoleControllerTestIntegration {
         UserEntity admin = UserEntity.builder()
             .username("piotr.kowalski")
             .password("password2")
-            .firstname("piotr")
-            .surname("kowalski")
             .email("piotr@mail.com")
             .phone("123456789")
             .build();

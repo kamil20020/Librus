@@ -93,8 +93,6 @@ public class UserControllerTestIntegration {
         UserEntity loggedUser = UserEntity.builder()
             .username("user")
             .password(encryptedPassword)
-            .firstname("user")
-            .surname("user")
             .email("user@mail.com")
             .phone("123456")
             .build();
@@ -117,8 +115,6 @@ public class UserControllerTestIntegration {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("kamil@mail.com")
             .phone("123")
             .build();
@@ -154,8 +150,6 @@ public class UserControllerTestIntegration {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("kamil@mail.com")
             .phone("123")
             .build();
@@ -165,8 +159,6 @@ public class UserControllerTestIntegration {
         UserEntity user1 = UserEntity.builder()
             .username("adam")
             .password("password123")
-            .firstname("adam")
-            .surname("kowalski")
             .email("adam@mail.com")
             .phone("1234")
             .build();
@@ -228,8 +220,6 @@ public class UserControllerTestIntegration {
         UserEntity user = UserEntity.builder()
             .username("adam.nowak")
             .password("password")
-            .firstname("adam")
-            .surname("nowak")
             .email("adam@mail.com")
             .phone("123")
             .build();
@@ -275,8 +265,6 @@ public class UserControllerTestIntegration {
         UserEntity user = UserEntity.builder()
             .username("adam.nowak")
             .password("password")
-            .firstname("adam")
-            .surname("nowak")
             .email("adam@mail.com")
             .phone("123")
             .build();
@@ -322,8 +310,6 @@ public class UserControllerTestIntegration {
         UserEntity user = UserEntity.builder()
             .username("adam.nowak")
             .password("password")
-            .firstname("adam")
-            .surname("nowak")
             .email("adam@mail.com")
             .phone("123")
             .build();
@@ -359,8 +345,6 @@ public class UserControllerTestIntegration {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("mail@mail.com")
             .phone("123")
             .build();
@@ -381,8 +365,6 @@ public class UserControllerTestIntegration {
         assertNotNull(gotUserResponse);
         assertNotNull(gotUserResponse.id());
         assertEquals(user.getUsername(), gotUserResponse.username());
-        assertEquals(user.getFirstname(), gotUserResponse.firstname());
-        assertEquals(user.getSurname(), gotUserResponse.surname());
         assertEquals(user.getEmail(), gotUserResponse.email());
         assertEquals(user.getPhone(), gotUserResponse.phone());
 
@@ -408,8 +390,6 @@ public class UserControllerTestIntegration {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("kamil@mail.com")
             .phone("123")
             .build();
@@ -423,8 +403,6 @@ public class UserControllerTestIntegration {
             "kamil1",
             rawPatchPassword,
             "email@mai.com",
-            "adam",
-            "nowak1",
             "12345"
         );
 
@@ -448,8 +426,6 @@ public class UserControllerTestIntegration {
         assertNotNull(gotUserResponse);
         assertEquals(request.username(), gotUserResponse.username());
         assertEquals(request.email(), gotUserResponse.email());
-        assertEquals(request.firstname(), gotUserResponse.firstname());
-        assertEquals(request.surname(), gotUserResponse.surname());
         assertEquals(request.phone(), gotUserResponse.phone());
 
         UserEntity foundUser = userRepository.findById(user.getId()).get();
@@ -457,8 +433,6 @@ public class UserControllerTestIntegration {
         assertEquals(request.username(), foundUser.getUsername());
         assertTrue(passwordEncoder.matches(request.password(), foundUser.getPassword()));
         assertEquals(request.email(), foundUser.getEmail());
-        assertEquals(request.firstname(), foundUser.getFirstname());
-        assertEquals(request.surname(), foundUser.getSurname());
         assertEquals(request.phone(), foundUser.getPhone());
     }
 
@@ -469,8 +443,6 @@ public class UserControllerTestIntegration {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("kamil@mail.com")
             .phone("123")
             .build();

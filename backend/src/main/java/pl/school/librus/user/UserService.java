@@ -113,16 +113,6 @@ public class UserService implements UserDetailsService {
             gotUser.setEmail(request.email());
         }
 
-        if(request.firstname() != null){
-
-            gotUser.setFirstname(request.firstname());
-        }
-
-        if(request.surname() != null){
-
-            gotUser.setSurname(request.surname());
-        }
-
         if(request.phone() != null){
 
             gotUser.setPhone(request.phone());

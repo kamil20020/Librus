@@ -46,8 +46,6 @@ class UserRepositoryTest {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("mail@mail.com")
             .phone("123")
             .build();
@@ -74,8 +72,6 @@ class UserRepositoryTest {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("mail@mail.com")
             .phone("123")
             .build();
@@ -103,8 +99,6 @@ class UserRepositoryTest {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("mail@mail.com")
             .phone("123")
             .build();
@@ -132,8 +126,6 @@ class UserRepositoryTest {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("mail@mail.com")
             .phone("123")
             .build();

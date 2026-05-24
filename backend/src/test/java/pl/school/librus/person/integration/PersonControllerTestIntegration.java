@@ -105,8 +105,6 @@ public class PersonControllerTestIntegration {
         UserEntity loggedUser = UserEntity.builder()
             .username(username)
             .password(encryptedPassword)
-            .firstname("user")
-            .surname("user")
             .email("user@mail.com")
             .phone("123456")
 
@@ -899,8 +897,6 @@ public class PersonControllerTestIntegration {
         UserEntity user = UserEntity.builder()
             .username("kamil")
             .password("password")
-            .firstname("kamil")
-            .surname("nowak")
             .email("kamil@mail.com")
             .phone("123")
             .build();

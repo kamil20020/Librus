@@ -50,8 +50,6 @@ class UserServiceTest {
             "kamil",
             rawPassword,
             "kamil@mail.com",
-            "kamil",
-            "nowak",
             "123"
         );
 
@@ -59,8 +57,6 @@ class UserServiceTest {
             .username(request.username())
             .password(request.password())
             .email(request.email())
-            .firstname(request.firstname())
-            .surname(request.surname())
             .phone(request.phone())
             .build();
 
@@ -68,8 +64,6 @@ class UserServiceTest {
             .username(request.username())
             .password(encryptedPassword)
             .email(request.email())
-            .firstname(request.firstname())
-            .surname(request.surname())
             .phone(request.phone())
             .build();
 
@@ -78,8 +72,6 @@ class UserServiceTest {
             .username(request.username())
             .password(encryptedPassword)
             .email(request.email())
-            .firstname(request.firstname())
-            .surname(request.surname())
             .phone(request.phone())
             .build();
 
@@ -117,8 +109,6 @@ class UserServiceTest {
             "kamil",
             "password",
             "kamil@mail.com",
-            "kamil",
-            "nowak",
             "123"
         );
 

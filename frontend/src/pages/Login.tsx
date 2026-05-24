@@ -48,11 +48,7 @@ const formProps: FormElementProps[] = [
         inputId:"password",
         labelValue:"Hasło",
         placeholder:"*****",
-        validations: [
-            RequiredValidator,
-            new FieldTooShortValidator(8),
-            new FieldTooLongValidator(20)
-        ]
+        validations: [RequiredValidator]
     },
 ]
 
