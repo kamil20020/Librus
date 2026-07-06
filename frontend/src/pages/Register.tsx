@@ -129,7 +129,7 @@ const Register = () => {
 
             notification.setNotification("Zarejestrowano się", NotificationType.SUCCEESS);
 
-            navigate("/")
+            navigate("/");
             return;
         }
 
