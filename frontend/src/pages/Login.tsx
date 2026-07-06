@@ -11,6 +11,7 @@ import { useLoading } from "../store/LoadingStore";
 import { useEffect } from "react";
 import { useLoadingHandleRequest } from "../hooks/useLoadingHandleRequest";
 import { NotificationType, useNotification } from "../store/NotificationStore";
+import { useNavigate } from "react-router";
 
 interface LoginProps{
     username: string;
@@ -58,6 +59,7 @@ const Login = () => {
         getRequest: (requestData: LoginRequest) => AuthService.login(requestData)
     });
     const notification = useNotification();
+    const navigate = useNavigate();
 
     const handleLogin = (form: LoginProps) => {
 
@@ -80,6 +82,7 @@ const Login = () => {
 
             notification.setNotification("Zalogowano się", NotificationType.SUCCEESS);
 
+            navigate("/");
             return;
         }
 

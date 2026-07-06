@@ -2,9 +2,9 @@
 
 class FieldTooLongValidator extends Validator{
 
-    maxLength: number;
+    private maxLength: number;
 
-    errorMessage: string = "Wymagane maksimum {} znaki"
+    private errorMessage: string = "Wymagane maksimum {} znaki"
 
     constructor(maxLength: number){
         super();

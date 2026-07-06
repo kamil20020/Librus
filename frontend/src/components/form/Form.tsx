@@ -64,7 +64,7 @@ const Form = <F extends Base, E extends Base,>(props: {
         }
 
         try{
-            FormValidateService.validateFieldWithValidators(formValue, field.validations);
+            FormValidateService.validateFieldWithValidators(formValue, field.validations, formValues);
         }
         catch(rawError: any){
             const error = rawError as Error;

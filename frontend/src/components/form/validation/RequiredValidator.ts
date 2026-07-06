@@ -2,7 +2,7 @@
 
 class RequiredValidator extends Validator{
 
-    errorMessage: string = "Pole jest wymagane";
+    private errorMessage: string = "Pole jest wymagane";
 
     public validate(value?: string): boolean {
        

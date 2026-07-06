@@ -2,9 +2,9 @@
 
 export default class FieldTooShortValidator extends Validator{
 
-    minLength: number;
+    private minLength: number;
 
-    errorMessage: string = "Wymagane co najmniej {} znaki"
+    private errorMessage: string = "Wymagane co najmniej {} znaki"
 
     constructor(minlength: number){
         super();
